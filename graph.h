@@ -1,32 +1,27 @@
 #ifndef GRAPH_H
 #define GRAPH_H
-#include <vector>
-#include <set>
+#include <list>
 
 using namespace std;
 
-typedef vector<Vertex> Vertices;
-typedef set<int> Neighbours;
-
-struct Vertex{
-	public:
-		int label;
-		Neighbours links_to;
-}
-
 class Graph{
 	public:
-		Vertices vertices;
+		int n;	// nb de noeuds
+		list<int> *adj;  // liste d'adjacence (plus performante qu'avec une matrice d'adj.)
+		list<int> *scc;  // liste de Strongly Connected Components
 }
 
-// get vertex i
-void Graph::getVertex(int i);
+// constructor : graphe vide de taille nb_noeuds
+Graph::Graph(int)
+
+// constructor : build graph from a text file
+Graph::Graph(const char *);
 
 // add the edge i -> j
-void Graph::addEdge(int i, int j);
+void Graph::addEdge(int, int);
 
-// reads in a graph from a text file
-Graph readGraph(const char *);
+// Kosajaru's algorithm
+void Graph::kosajaru();
 
 
 #endif
