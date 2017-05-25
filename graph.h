@@ -23,5 +23,8 @@ void addEdge(int, int);
 // Kosajaru's algorithm
 void kosajaru();
 
+// ER Graph
+Graph er_graph(int, double);
+
 
 #endif

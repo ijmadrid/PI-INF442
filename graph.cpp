@@ -29,3 +29,18 @@ void addEdge(int i, int j){
 
 void kosajaru(){
 }
+
+Graph er_graph(int nb_noeuds, double p){
+	Graph g(nb_noeuds);
+	double u;
+	for(int i = 0; i < nb_noeuds; i++){
+	for(int j = 0; j < nb_noeuds; j++){
+		u = rand()/(double)RAND_MAX;
+		if(u < p){
+			g.addEdge(i,j);
+		}
+	}}
+	return g;
+}
+
+
