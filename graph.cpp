@@ -61,13 +61,13 @@ void Graph::scc_kosajaru(){
 	bool *visited = new bool[n];
     for(int i = 0; i < n; i++)
 	    visited[i] = false;
-	//cout << "pass 1" << endl;
+	cout << "1. Initialisation passed" << endl;
 
 	// 2. Premier DFS
-    for(int i = 0; i < n; i++){
+    for(int i = 0; i < n; i++){  // TODO: changer a for(int i in keys)
         if(!visited[i]){
             dfs(i, visited, reachable_vertices);}} 
-	//cout << "pass 2" << endl;
+	cout << "2. Premier DFS passed" << endl;
 
 	// 3. Inversion de direction des aretes
 	Graph g_inverse(n);
@@ -75,7 +75,7 @@ void Graph::scc_kosajaru(){
         list<int>::iterator j;
         for(j = adj[i].begin(); j != adj[i].end(); ++j){
             g_inverse.adj[*j].push_back(i);}}
-	//cout << "pass 3" << endl;
+	cout << "3. Inversion passed" << endl;
 
 	// 4. Deuxieme DFS
 	for(int i = 0; i < n; i++){
@@ -93,7 +93,7 @@ void Graph::scc_kosajaru(){
             scc->push_back(scc_of_v);
         }
     }
-	//cout << "pass 4" << endl;
+	cout << "4. Deuxieme DFS passed" << endl;
 
 	//delete *g_inverse;
 	delete visited;
