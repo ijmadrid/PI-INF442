@@ -1,6 +1,8 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 #include <list>
+#include <map>
+#include <set>
 #include <stack>
 
 using namespace std;
@@ -8,7 +10,8 @@ using namespace std;
 class Graph{
 	public:
 		int n;	// nb de noeuds
-		list<int> *adj;  // liste d'adjacence (plus performante qu'avec une matrice d'adj.)
+		// list<int> *adj;  // liste d'adjacence (plus performante qu'avec une matrice d'adj.)
+		map<int, list<int> > adj;
 		list<stack<int> > *scc;  // liste de Strongly Connected Components
 
 		// constructor : graphe vide de taille nb_noeuds

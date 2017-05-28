@@ -7,7 +7,8 @@
 
 Graph::Graph(int nb_noeuds){
 	n = nb_noeuds;
-	adj = new list<int>[nb_noeuds];
+//	adj = new list<int>[nb_noeuds];
+	adj = * new map<int, list<int> >;
 	scc = new list<stack<int> >;
 }
 
@@ -16,12 +17,17 @@ Graph::Graph(const char *filename){
 	int nb_noeuds;
 	int edges;
 	file >> nb_noeuds >> edges;
+	cout << "Graph loaded : " << nb_noeuds << " nodes and " << edges << " edges." << endl;
 	n = nb_noeuds;
+//	adj = new list<int>[nb_noeuds];
+	adj = * new map<int, list<int> >;
+	scc = new list<stack<int> >;
 	int i;
 	int j;
 	while (file >> i >> j) {
 		addEdge(i,j);
 	}
+	cout << "All edges charged succesfully." << endl;
 }
 
 list<int> Graph::successors(int v){
