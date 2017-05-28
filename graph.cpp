@@ -38,7 +38,7 @@ void Graph::addEdge(int i, int j){
 	adj[i].push_back(j);
 }
 
-void Graph::dfs(int v, bool visited[], stack<int> &reachable_vertices){
+void Graph::dfs(int v, map<int, bool > &visited, stack<int> &reachable_vertices){
 	visited[v] = true;
 	list<int>::iterator i;
 	for (i = adj[v].begin(); i != adj[v].end(); ++i)
@@ -58,28 +58,45 @@ void Graph::scc_kosajaru(){
 
 	// 1. Initialisation
 	stack<int> reachable_vertices; // last visited, first out
-	bool *visited = new bool[n];
-    for(int i = 0; i < n; i++)
-	    visited[i] = false;
+//	bool *visited = new bool[n];
+	map<int, bool > visited;
+//  for(int i = 0; i < n; i++){
+	int contador = 0;
+	for(map<int, list<int> >::iterator it = adj.begin(); it!= adj.end(); it++){ 
+	    visited[it->first] = false;
+		cout << "Pasada numero " << contador++ << " por adj" << endl; }
 	cout << "1. Initialisation passed" << endl;
+	cout << "Visited a une taille de " << visited.size() << endl;
 
 	// 2. Premier DFS
-    for(int i = 0; i < n; i++){  // TODO: changer a for(int i in keys)
-        if(!visited[i]){
-            dfs(i, visited, reachable_vertices);}} 
+//  for(int i = 0; i < n; i++){  // TODO: changer a for(int i in keys)
+	for(map<int, bool >::iterator it = visited.begin(); it!= visited.end(); it++){
+        if(it->second==false){
+            dfs(it->first, visited, reachable_vertices);}}
 	cout << "2. Premier DFS passed" << endl;
+	cout << "Visited a une taille de " << visited.size() << endl;
+
+	for(map<int, bool >::iterator it = visited.begin(); it!= visited.end(); it++){
+		cout << "Noeud " << it->first << " : visited = " << it->second << endl;}
 
 	// 3. Inversion de direction des aretes
 	Graph g_inverse(n);
-    for (int i = 0; i < n; i++){
+    for(map<int, list<int> >::iterator it = adj.begin(); it!= adj.end(); it++){
+		int i = it->first;
         list<int>::iterator j;
         for(j = adj[i].begin(); j != adj[i].end(); ++j){
             g_inverse.adj[*j].push_back(i);}}
 	cout << "3. Inversion passed" << endl;
+	cout << "Visited a une taille de " << visited.size() << endl;
+
 
 	// 4. Deuxieme DFS
-	for(int i = 0; i < n; i++){
-        visited[i] = false;}  // on reset visited
+//	for(int i = 0; i < n; i++){
+//        visited[i] = false;}  // on reset visited
+
+	for(map<int, list<int> >::iterator it = adj.begin(); it!= adj.end(); it++){ 
+	    visited[it->first] = false;}
+	cout << "reachable_vertices a une taille de " << reachable_vertices.size() << endl;
 
 	while (!reachable_vertices.empty()){
         // Last visited, first out
@@ -94,9 +111,10 @@ void Graph::scc_kosajaru(){
         }
     }
 	cout << "4. Deuxieme DFS passed" << endl;
+	cout << "Visited a une taille de " << visited.size() << endl;
 
 	//delete *g_inverse;
-	delete visited;
+	//delete &visited;
 }
 
 void Graph::printscc(){
