@@ -47,6 +47,13 @@ class Graph{
 
 		// MPI ER Graph
 		int parallel_er(int, double);
+
+		// Parallel SCC detection
+		void parallel_scc();
+
+		// Obtain the sets Succ and Pred of a given node:
+		stack<int> succ(int);
+		stack<int> pred(int);
 };
 
 #endif
