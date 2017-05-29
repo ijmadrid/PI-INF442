@@ -20,6 +20,9 @@ class Graph{
 		// constructor : build graph from a text file
 		Graph(const char *);
 
+		// constructor : build graph from an adjacency matrix
+		Graph(int**, int);
+
 		// destructor
 		~Graph() {};
 
@@ -41,6 +44,9 @@ class Graph{
 
 		// ER Graph
 		Graph er_graph(int, double);
+
+		// MPI ER Graph
+		int parallel_er(int, double);
 };
 
 #endif

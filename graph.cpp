@@ -30,6 +30,18 @@ Graph::Graph(const char *filename){
 	cout << "All edges charged succesfully." << endl;
 }
 
+
+Graph::Graph(int  **A, int nb_noeuds){
+	n = nb_noeuds;
+	adj = * new map<int, list<int> >;
+	scc = new list<stack<int> >;
+	for (unsigned int i = 0; i < n; ++i){
+	for (unsigned int j = 0; j < n; ++j){	
+		if(A[i][j] == 1){
+			addEdge(i,j);}
+	}}
+}
+
 list<int> Graph::successors(int v){
 	return adj[v];
 }
