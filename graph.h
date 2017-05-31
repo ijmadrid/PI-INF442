@@ -12,7 +12,8 @@ class Graph{
 		int n;	// nb de noeuds
 //		list<int> *adj;  // liste d'adjacence 
 		map<int, list<int> > adj;  // liste d'adjacence comme map
-		list<stack<int> > *scc;  // liste de Strongly Connected Components
+		map<int, list<int> > adj_in;  // liste de voisins precedents
+		list<list<int> > *scc;  // liste de Strongly Connected Components
 
 		// constructor : graphe vide de taille nb_noeuds
 		Graph(int);
@@ -20,7 +21,7 @@ class Graph{
 		// constructor : build graph from a text file
 		Graph(const char *);
 
-		// constructor : build graph from an adjacency matrix
+		// constructor : build graph from an adjacency matrix of given size
 		Graph(int**, int);
 
 		// destructor
@@ -33,7 +34,7 @@ class Graph{
 		list<int> successors(int);
 
 		// Parcours en profondeur (DFS)
-		void dfs(int, map<int, bool >&, stack<int>&);
+		void dfs(int, map<int, bool >&, list<int>&);
 		//void dfs(int);
 
 		// Kosajaru's algorithm
@@ -49,11 +50,18 @@ class Graph{
 		int parallel_er(int, double);
 
 		// Parallel SCC detection
-		void parallel_scc();
+		void dcsc(int);
 
 		// Obtain the sets Succ and Pred of a given node:
-		stack<int> succ(int);
-		stack<int> pred(int);
+		list<int> succ(int);
+		list<int> pred(int);
+
+		// Subgraph
+		Graph subgraph(list<int>);
+
+		// Get pivot for the parallel SCC search
+		int pivot(list<int>);
+		
 };
 
 #endif
