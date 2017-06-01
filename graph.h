@@ -50,7 +50,7 @@ class Graph{
 		int parallel_er(int, double);
 
 		// Parallel SCC detection
-		void dcsc(int);
+		void dcsc(int, list<list<int> >&);
 
 		// Obtain the sets Succ and Pred of a given node:
 		list<int> succ(int);

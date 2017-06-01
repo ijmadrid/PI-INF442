@@ -159,7 +159,20 @@ Graph Graph::er_graph(int nb_noeuds, double p){
 }
 
 Graph Graph::subgraph(list<int> subnodes){
-	// TODO: return a subgraph with nodes subnodes. Adjacency is conserved.
+	// TODO: return a subgraph whose nodes are subnodes. The edges between them are conserved.
+
+	set<int> subnodes_set;
+	for(list<int>::iterator it = subnodes.begin(); it!= subnodes.end(); it++){
+		subnodes_set.insert(*it);}
+
+	Graph g(subnodes.size());
+	for(list<int>::iterator it = subnodes.begin(); it!= subnodes.end(); it++){
+		for(list<int>::iterator jt = adj[*it].begin(); jt != adj[*it].end(); jt++){
+			if(subnodes_set.count(*jt) == 1){ g.adj[*it].push_back(*jt); }
+		}
+	}
+
+	return g;
 	}
 
 

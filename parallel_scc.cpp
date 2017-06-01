@@ -59,9 +59,10 @@ int Graph::pivot(list<int> nodes_set){
 }*/
 
 
-void Graph::dcsc(int v){
+void Graph::dcsc(int v, list<list<int> > &localscc){
+	cout << "Pivot is " << v << endl;
 	// SEQUENTIAL (just for test)
-	if (adj.empty()){return;}
+	if (adj.empty()){ cout << "adj is empty " << endl; return;}
 
 	// Obtain predecesors and sucessor
 	list<int> pred = this->pred(v);
@@ -88,35 +89,45 @@ void Graph::dcsc(int v){
 		s4.remove(*it);
 	}
 
-	scc->push_back(s1);  // s1 is a scc
+	localscc.push_back(s1);  // s1 is a scc
+	cout << " SCC found and added " << endl;
+	cout << " Verified : scc.size() = " << localscc.size() << endl;
+
 
 	// recursion (partie à paralleliser après):
 	// TODO: completer subgraph in graph.cpp ; completer un methode pour choisir pivot
-	subgraph(s2).dcsc(pivot(s2));
-	subgraph(s3).dcsc(pivot(s3));
-	subgraph(s4).dcsc(pivot(s4));
+	cout << " RECURSION WITH S2 " << endl;
+	subgraph(s2).dcsc(pivot(s2),localscc);
+	cout << " RECURSION WITH S3 " << endl;
+	subgraph(s3).dcsc(pivot(s3),localscc);
+	cout << " RECURSION WITH S4 " << endl;
+	subgraph(s4).dcsc(pivot(s4),localscc);
 
 	return;
 
-	/*for(list<int>::iterator it = s1.begin(); it!= s1.end(); it++){
+	cout << " S1 = { ";
+	for(list<int>::iterator it = s1.begin(); it!= s1.end(); it++){
 		cout << *it << " ";
 	}
-	cout << endl;
+	cout << " } " << endl;
 
+	cout << " S2 = { ";
 	for(list<int>::iterator it = s2.begin(); it!= s2.end(); it++){
 		cout << *it << " ";
 	}
-	cout << endl;
+	cout << " } " << endl;
 
+	cout << " S3 = { ";
 	for(list<int>::iterator it = s3.begin(); it!= s3.end(); it++){
 		cout << *it << " ";
 	}
-	cout << endl;
+	cout << " } " << endl;
 
+	cout << " S4 = { ";
 	for(list<int>::iterator it = s4.begin(); it!= s4.end(); it++){
 		cout << *it << " ";
 	}
-	cout << endl;*/
+	cout << " } " << endl;
 
 
 }

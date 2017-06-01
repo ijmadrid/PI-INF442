@@ -27,10 +27,13 @@ int main() {
 	g.addEdge(7, 3);
 
     int v = 3;
-    cout << "Strongly connected components : " << endl;
     cout << " Pivot choisi : 3 " << endl; 
-    g.dcsc(v);
-    //g.printscc();
+    list<list<int> > *localscc = new list<list<int> >;
+    g.dcsc(v, *localscc);
+    cout << (*localscc).size() << endl;
+    g.scc = localscc;
+    cout << "Strongly connected components : " << endl;
+    g.printscc();
  
 
     return 0;
