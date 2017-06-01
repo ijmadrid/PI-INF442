@@ -40,7 +40,7 @@ list<int> Graph::pred(int v){
 int Graph::pivot(list<int> nodes_set){
 	// Le pivot est juste le premier element du set (à amelliorer)
 	if(nodes_set.empty()){return 0;}
-	else{return nodes_set.front();}
+	else{return nodes_set.back();}
 }
 
 /*void Graph::topologicalSort(){
@@ -68,6 +68,9 @@ void Graph::dcsc(int v, list<list<int> > &localscc){
 	list<int> pred = this->pred(v);
 	list<int> succ = this->succ(v);
 	
+	pred.sort();
+	succ.sort();
+
 	list<int> s1;
 	list<int> s2;
 	list<int> s3;
@@ -93,18 +96,6 @@ void Graph::dcsc(int v, list<list<int> > &localscc){
 	cout << " SCC found and added " << endl;
 	cout << " Verified : scc.size() = " << localscc.size() << endl;
 
-
-	// recursion (partie à paralleliser après):
-	// TODO: completer subgraph in graph.cpp ; completer un methode pour choisir pivot
-	cout << " RECURSION WITH S2 " << endl;
-	subgraph(s2).dcsc(pivot(s2),localscc);
-	cout << " RECURSION WITH S3 " << endl;
-	subgraph(s3).dcsc(pivot(s3),localscc);
-	cout << " RECURSION WITH S4 " << endl;
-	subgraph(s4).dcsc(pivot(s4),localscc);
-
-	return;
-
 	cout << " S1 = { ";
 	for(list<int>::iterator it = s1.begin(); it!= s1.end(); it++){
 		cout << *it << " ";
@@ -129,7 +120,18 @@ void Graph::dcsc(int v, list<list<int> > &localscc){
 	}
 	cout << " } " << endl;
 
+	// recursion (partie à paralleliser après):
+	// TODO: completer subgraph in graph.cpp ; completer un methode pour choisir pivot
+	cout << " RECURSION WITH S2 " << endl;
+	subgraph(s2).dcsc(pivot(s2),localscc);
+	cout << " RECURSION WITH S3 " << endl;
+	subgraph(s3).dcsc(pivot(s3),localscc);
+	cout << " RECURSION WITH S4 " << endl;
+	subgraph(s4).dcsc(pivot(s4),localscc);
 
+
+
+	return;
 }
 
 /*void Graph::parallel_scc(int v){

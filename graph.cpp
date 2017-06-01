@@ -168,7 +168,7 @@ Graph Graph::subgraph(list<int> subnodes){
 	Graph g(subnodes.size());
 	for(list<int>::iterator it = subnodes.begin(); it!= subnodes.end(); it++){
 		for(list<int>::iterator jt = adj[*it].begin(); jt != adj[*it].end(); jt++){
-			if(subnodes_set.count(*jt) == 1){ g.adj[*it].push_back(*jt); }
+			if(subnodes_set.count(*jt) > 0){ g.adj[*it].push_back(*jt); }
 		}
 	}
 
