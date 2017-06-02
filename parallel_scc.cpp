@@ -134,6 +134,74 @@ void Graph::dcsc(int v, list<list<int> > &localscc){
 	return;
 }
 
+void parallel_dcsc(int v, list<list<int> > &localscc){
+	// SEQUENTIAL (just for test)
+	if (adj.empty()){return;}
+
+	// Obtain predecesors and sucessor
+	list<int> pred = this->pred(v);
+	list<int> succ = this->succ(v);
+	
+	pred.sort();
+	succ.sort();
+
+	list<int> s1;
+	list<int> s2;
+	list<int> s3;
+	list<int> s4;
+
+	set_intersection(pred.begin(),pred.end(),succ.begin(),succ.end(),inserter(s1,s1.begin()));
+	set_difference(pred.begin(),pred.end(),succ.begin(),succ.end(),inserter(s2,s2.begin()));
+	set_difference(succ.begin(),succ.end(),pred.begin(),pred.end(),inserter(s3,s3.begin()));
+	
+	for(map<int, list<int> >::iterator it = adj.begin(); it!= adj.end(); it++){
+		s4.push_back(it->first);
+	}
+	for(list<int>::iterator it = pred.begin(); it!= pred.end(); it++){
+		s4.remove(*it);
+	}
+	for(list<int>::iterator it = succ.begin(); it!= succ.end(); it++){
+		s4.remove(*it);
+	}
+
+	localscc.push_back(s1);  // s1 is a scc
+	cout << " SCC found and added " << endl;
+	cout << " Verified : scc.size() = " << localscc.size() << endl;
+
+	cout << " S1 = { ";
+	for(list<int>::iterator it = s1.begin(); it!= s1.end(); it++){
+		cout << *it << " ";
+	}
+	cout << " } " << endl;
+
+	cout << " S2 = { ";
+	for(list<int>::iterator it = s2.begin(); it!= s2.end(); it++){
+		cout << *it << " ";
+	}
+	cout << " } " << endl;
+
+	cout << " S3 = { ";
+	for(list<int>::iterator it = s3.begin(); it!= s3.end(); it++){
+		cout << *it << " ";
+	}
+	cout << " } " << endl;
+
+	cout << " S4 = { ";
+	for(list<int>::iterator it = s4.begin(); it!= s4.end(); it++){
+		cout << *it << " ";
+	}
+	cout << " } " << endl;
+
+	// recursion (partie à paralleliser après):
+	// TODO: completer subgraph in graph.cpp ; completer un methode pour choisir pivot
+	cout << " RECURSION WITH S2 " << endl;
+	subgraph(s2).dcsc(pivot(s2),localscc);
+	cout << " RECURSION WITH S3 " << endl;
+	subgraph(s3).dcsc(pivot(s3),localscc);
+	cout << " RECURSION WITH S4 " << endl;
+	subgraph(s4).dcsc(pivot(s4),localscc);
+}
+
 /*void Graph::parallel_scc(int v){
 
 	const int root = 0;

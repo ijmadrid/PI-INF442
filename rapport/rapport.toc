@@ -1,0 +1,8 @@
+\select@language {french}
+\contentsline {section}{\numberline {1}Pr\IeC {\'e}liminaires : structures des donn\IeC {\'e}es choisies pour le traitement de graphes}{3}{section.1}
+\contentsline {section}{\numberline {2}Premier partie : algorithme s\IeC {\'e}quentiel de recherche de SCC}{4}{section.2}
+\contentsline {subsection}{\numberline {2.1}Algorithme de Kosaraju}{4}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Graphes de Erd\IeC {\"o}s-R\IeC {\'e}nyi}{4}{subsection.2.2}
+\contentsline {section}{\numberline {3}Deuxi\IeC {\`e}me partie : algorithme parall\IeC {\`e}le de recherche de SCC}{6}{section.3}
+\contentsline {subsection}{\numberline {3.1}Graphes ER en parall\IeC {\`e}le}{6}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Recherche de SCC en parall\IeC {\`e}le}{6}{subsection.3.2}

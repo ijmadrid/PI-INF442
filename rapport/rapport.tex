@@ -1,0 +1,119 @@
+\documentclass[a4paper,12pt,twoside]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[french]{babel}
+\usepackage{url,csquotes}
+\usepackage[hidelinks,hyperfootnotes=false]{hyperref}
+\usepackage[titlepage,fancysections,pagenumber]{polytechnique}
+\usepackage{amsmath, amsthm, amsfonts,amssymb}
+\usepackage{bbm}
+\usepackage{float}
+\usepackage[french]{algorithm2e}
+
+% Calculus symbols
+\newcommand{\pd}[2]{\frac{\partial #1}{ \partial #2}}   % First partial derivative command
+\newcommand{\td}[2]{\frac{\mathrm{d} #1}{ \mathrm{d} #2}}
+\newcommand{\pdd}[2]{\frac{\partial^2 #1}{ \partial #2 ^2}}   % Second partial derivative command
+\newcommand{\pddc}[3]{\frac{\partial^2 #1}{ \partial #2 \partial #3}}   % Second partial derivative command
+
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\parentesis}[1]{\left(#1\right)}
+\newcommand{\inprod}[1]{\left<#1\right>}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\norma}[1]{\abs{\abs{#1}}}
+\newcommand{\roundbrk}[1]{\left(#1\right)}
+
+\newcommand{\zz}{{\mathbb Z}}
+\newcommand{\nn}{{\mathbb N}}
+\newcommand{\rr}{{\mathbb R}}
+\newcommand{\cc}{{\mathbb C}}
+
+\def\dz{\mbox{\(\,\mathrm{d}z\)}}
+\def\dx{\mbox{\(\,\mathrm{d}x\)}}
+
+\title[INF442 8 : Finding SCC]{Finding Strongly Connected Components}
+\subtitle{Projet 8 \\ INF 442 : Traitement des données massives}
+\author{LAPINHA DALLA STELLA Luis \\ MADRID CANALES Ignacio}
+%\logo[headers]{Chemin relatif vers le logo}
+
+\setcounter{tocdepth}{5}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\section{Préliminaires : structures des données choisies pour le traitement de graphes}
+
+En ce qui concerne les structures des donnés choisies, on a défini les graphes à travers listes d’adjacence plutôt qu’à travers matrices d’adjacence. Alors, on a une occupation en mémoire de $O(V+E)$, ainsi qu’une complexité de $O(V+E)$ pour les parcours en profondeur (utilisés pour l’algorithme séquentiel de recherche de SCC, ainsi que pour trouver les ensembles \textbf{Succ} et \textbf{Pred} dans l’algorithme parallèle).
+
+Pour les listes d’adjacence de chaque sommet on a utilisé des objets du type \texttt{list<int>} de la STL de C++ plutôt que \texttt{vector<int>}, car on fait plusieurs insertions et \textit{pops} de la liste. De même, on n’a pas besoin de connaître la position exacte des voisins au sein de la liste pour les algorithmes proposés. Ainsi la liste d’adjacence du objet \texttt{Graph} résout finalement une table de hachage où chaque sommet est un clé et la liste de ses voisins sortants sa valeur. Pour ce faire on utilise objets du type \texttt{map<int, list<int> >} de la STL. 
+ 
+
+
+\newpage
+\section{Premier partie : algorithme séquentiel de recherche de SCC}
+
+\subsection{Algorithme de Kosaraju}
+
+Pour l'identification séquentielle de SCC on a décidé d'utiliser l'algorithme de Kosaraju pour sa simplicité. En revanche, cet algorithme est moins performant que l'algorithme de Tarjan (optimal en temps) car il requiert deux parcours en profondeur (DFS) au lieu d'un. L'algorithme est décrit a continuation:
+
+\begin{algorithm}
+ \KwData{$G(V,E)$, $SCC = \emptyset$}
+ \KwResult{void() ($SCC$ mis à jour, les éléments de $SCC$ étant les strongly connected components)}
+ $S \longleftarrow \emptyset$\;
+ Faire DFS du graph $G$ en ajoutant chaque sommet visité dans $S$\;
+ Transposer $G$\;
+ \While{$S$ n'est pas vide}{
+	 $v \longleftarrow $ premier element de $S$ (pop)\;
+	 $L \longleftarrow \emptyset$\;
+	 Faire DFS du $G$ (transposé) à partir du sommet $v$ en ajoutant chaque sommet visité dans $L$\;
+	 Ajouter $L$ à $SCC$} 
+ \caption{Méthode de Kosaraju pour la recherche de SCC}
+ \label{algo}
+\end{algorithm}
+
+Comme on fait les parcours DFS en utilisant listes d'adjacence on obtient un complexité linéaire $O(V+E)$ pour cet algorithme.
+
+On a identifié alors SCC de graphes issues de la vie réelle (de la collection SNAP). Il était possible d'observer un grand nombre de SCC singletons, ce qui suggère que c'est peut-être un bon idée d'éliminer les sommets qui n'ont ni sorties ni entrées. Ensuite, on a programmé des graphes aléatoires pour analyser la distribution de la quantité de SCC's dans le contexte de la formation des graphes de Erdös-Rényi.
+
+\subsection{Graphes de Erdös-Rényi}
+Pour tester l'identification de SCC on va d'abord générer des graphes aléatoires de Erdös-Rényi (ER), où chaque arête possible est construite avec un probabilité $p$ de manière indépendante.
+
+On fait plusieurs essaies avec probabilités de l'ordre de $1/n$, plus précisément des probabilités $c/n$ avec différents valeurs de $c$. On note d'ailleurs que $c$ correspond à l'espérance du degré de sommets du graphe. 
+
+\begin{table}[H]
+\centering
+\begin{tabular}{r|l||r|l}
+\text{Probabilité} & \text{Nombre de SCC identifiés} &  \text{Probabilité} & \text{Nombre de SCC identifiés}  \\ \hline
+0.0025 & 1.8 & 0.0925 & 9.48 \\ 
+0.0125 & 7.5 & 0.1025 & 7.49 \\ 
+0.0225 & 11.84 & 0.1125 & 6.61 \\ 
+0.0325 & 13.96 & 0.1225 & 5.53 \\ 
+0.0425 & 15.24 & 0.1325 & 4.54 \\ 
+0.0525 & 15.63 & 0.1425 & 3.6 \\ 
+0.0625 & 15.15 & 0.1525 & 3.2 \\ 
+0.0725 & 14.00 & 0.2025 & 1.43 \\ 
+0.0825 & 11.95 & 0.4025* & 1.00
+\end{tabular} 
+\caption{Nombre moyen de SCC identifiés dans graphes ER de 20 sommets avec différentes probabilités de liaison. Pour chaque probabilité on a fait 100 simulations. *À partir d'une probabilité de 0.4025 on a obtenu tout le temps 1 SCC en moyenne (le graphe complète était fortement connecté)}
+\label{table:petscc}
+\end{table}
+
+On observe qu'à partir d'une probabilité de 0.4025 le graphe commence à être totalement fortement connecté. De même le nombre maximal de SCC pour le graphe ER de 20 sommets semble être autour de 15, et il est atteint quand la probabilité d'adjacence est autour de 0.05, c'est-à-dire avec un degré moyen attendu de 1 pour chaque sommet ($1/20 = 0.05$). En effet, avec graphes avec d'autres quantités de sommets, on atteint la quantité maximal de SCC quand le degré moyen est de $1$ (83 SCC pour un graphe de 100 sommets quand $p = 0.105$, 24 SCC pour 30 sommets quand $p=0.03$, etc.). Ces résultats ne sont pas détailles ici car ils seraient redondants à côté des donnés présentés dans le tableau \ref{table:petscc}.
+\newpage
+\section{Deuxième partie : algorithme parallèle de recherche de SCC}
+
+\subsection{Graphes ER en parallèle}
+
+On a écrit un programme pour générer graphes ER en parallèle. Nonobstant l’utilisation préférentielle de listes d’adjacence, on a décidé d’utiliser matrices d’adjacence pour la formation de digraphes ER en parallèle. On les décompose par lignes entre les processus (cf. TD7). Ainsi, chaque processus génère lignes indépendantes de la matrice et finalement on somme les matrices issues de chaque processus pour obtenir la matrice d’adjacence globale. Comme pour la TD7 on a préféré des appels à \texttt{MPI\_Send} et \texttt{MPI\_Recv}, en évitant \texttt{MPI\_Reduce} avec \texttt{MPI\_SUM}. En effet, l’implémentation de la communication entre les processus avec des matrices (somme de \texttt{int**}) a résout bien plus simple qu’un éventuel partage de listes d’adjacence (union de \texttt{list<int>} au sein d’un \texttt{map<int, list<int> >}), ce qui requiert connaître les sommets qui ont été assignés à chaque processus. En revanche, chaque processus doit générer une matrice complète de $V \times V$ remplie de zéros, pour après mettre aléatoirement les adjacences dans les lignes assignées, ce qui est assez inefficace en termes de mémoire ($O(V^2)$). 
+
+
+\subsection{Recherche de SCC en parallèle}
+
+\end{document}
+
